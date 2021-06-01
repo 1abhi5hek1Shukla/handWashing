@@ -48,30 +48,64 @@ def greyWorld(image):
 
 
 
-# rMean, bMean, gMean, varina = 0.38, 0.41, 0.36, 0.15
+rMean, bMean, gMean =  0.33, 0.41, 0.39
+varinaR, varinaG, varinaB = 0.15,0.14,0.13
+t = 171
 
-
-# def getPixMap(img):
-#     varR = varG = varB = varina
-#     global bMean, rMean, gMean
-# #     bMean, gMean, rMean 
-#     b,g,r = cv2.split(img)
+# 0.33 0.41 0.39 0.15 0.14 0.13
+# t = 171
+def getPixMap(img):
     
-#     summed = img.sum(axis=2)
-#     print(rMean,bMean,gMean, varina)
-#     bM = np.divide(b, summed,dtype='float32')
-#     gM = np.divide(g, summed,dtype='float32')
-#     rM = np.divide(r, summed,dtype='float32')
+    varR = varinaR
+    varG = varinaG
+    varB = varinaB
     
-#     skinProb = 1/(2*np.pi * varR**0.5 * varG**0.5) * np.exp(
-#         -(
-#             (rM - rMean)**2 / (2*varR) + 
-#             (gM - gMean)**2 / (2*varG) +
-#             (bM - bMean)**2 / (2*varB)
-#         )
-#     )
+    global bMean, rMean, gMean
+#     bMean, gMean, rMean 
+    b,g,r = cv2.split(img)
+    
+    summed = img.sum(axis=2)
+    # print(rMean,bMean,gMean, varinaR, varinaG, varinaB,)
+    bM = np.divide(b, summed,dtype='float32')
+    gM = np.divide(g, summed,dtype='float32')
+    rM = np.divide(r, summed,dtype='float32')
+    
+    skinProb = 1/(2*np.pi * varR**0.5 * varG**0.5) * np.exp(
+        -(
+            (rM - rMean)**2 / (2*varR) + 
+            (gM - gMean)**2 / (2*varG) +
+            (bM - bMean)**2 / (2*varB)
+        )
+    )
         
-#     return skinProb, cv2.merge([bM,gM,rM])
+    return skinProb, cv2.merge([bM,gM,rM])
+
+
+def on_change_red(value):
+    global rMean
+    rMean = value/100
+def on_change_green(value):
+    global gMean
+    gMean = value/100
+def on_change_blue(value):
+    global bMean
+    bMean = value/100
+    
+    
+def on_change_r_var(value):
+    global varinaR
+    varinaR = value/100
+def on_change_g_var(value):
+    global varinaG
+    varinaG = value/100
+def on_change_b_var(value):
+    global varinaB
+    varinaB = value/100
+    
+    
+def on_change_thresh(value):
+    global t
+    t = value
 
 
 
