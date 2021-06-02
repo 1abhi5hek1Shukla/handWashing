@@ -60,7 +60,7 @@ t = 171
 
 # 0.33 0.41 0.39 0.15 0.14 0.13
 # t = 171
-def getPixMap(img):
+def getPixMap(img, nrmFact = 255):
     
     varR = varinaR
     varG = varinaG
@@ -84,7 +84,7 @@ def getPixMap(img):
         )
     )
         
-    return skinProb, cv2.merge([bM,gM,rM])
+    return np.uint8(nrmFact*skinProb), cv2.merge([bM,gM,rM])
 
 
 def on_change_red(value):
