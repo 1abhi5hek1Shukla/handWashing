@@ -168,6 +168,22 @@ def biggestContour(contours):
                 max_area = area
     return biggest,max_area
 
+def calcRoi(singleFrame):
+    sh = singleFrame.shape
+    cx, cy = sh[1]//2, sh[0]//2 
+    # t,b,l,r
+    return [cy//4, 6*cy//4, cx//4, 6*cx//4] 
+
+
+def get_hand_segmented(rawFrame, kernel, threshing = True):
+    rawFrame = greyWorld(rawFrame)
+    
+    res, i = getPixMap(rawFrame)
+    if threshing:
+        ret, res = cv2.threshold(res,t,255, cv2.THRESH_BINARY)
+        # res = cv2.morphologyEx(res, cv2.MORPH_OPEN, kernel)
+
+    return rawFrame, res
 
 # RElated to Vidoe Runn
 # cv2.createTrackbar('rGreen', "Frame", int(100*gMean), 100, on_change_rGreen)
