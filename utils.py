@@ -189,5 +189,3 @@ def get_hand_segmented(rawFrame, kernel, threshing = True):
 
 
 ## Reading Train Data Images 
-def read_data():
-    pass

@@ -27,15 +27,18 @@ classFolderMap = {
 }
 
 
-videoPath = "./test/handWahimngMyKitchen.mp4"
-
-
+videoPath = "./test/"
+videosName = "handwash-004-a-01-g01_sHx4TMgg_TBKI.mp4"
 
 # For input dimensions
 img_rows,img_cols,img_depth=32,32,15
 
 # #########################
-cap = cv2.VideoCapture(videoPath)
+cap = cv2.VideoCapture(videoPath+videosName)
+
+writer = cv2.VideoWriter("output.mp4", 
+                         cv2.VideoWriter_fourcc(*"MP4V"), 30,(640,480))
+
 
 frames = []
 
@@ -53,7 +56,7 @@ while True:
 				print("Not Enough Frames")
 				sys.exit()
 			
-			frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+			# frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
 			frameCopy = frame.copy()
 			# cv2.imshow("Display", frame)
 			frame = cv2.resize(frame,(img_rows,img_cols),interpolation=cv2.INTER_AREA)
@@ -68,7 +71,7 @@ while True:
 		if not ret:
 			break
 		
-		frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+		# frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
 		frameCopy = frame.copy()
 		# cv2.imshow("Display", frame)
 		
@@ -100,9 +103,11 @@ while True:
 	image = cv2.putText(frameCopy, action + "with p = "+ str(y[0][index]), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 
                    1, (255, 0, 0), 2, cv2.LINE_AA)
 	cv2.imshow("Display", image)
+	writer.write(cv2.resize(image, (640,480)))
 	
 	if cv2.waitKey(30) & 0xFF == 27:
-		sys.exit()
+		break
 
+writer.release()
 cap.release()
 cv2.destroyAllWindows()

@@ -66,7 +66,6 @@ test_set = test_set.astype('float32')
 test_set -= np.mean(test_set)
 test_set /= np.max(test_set)
 
-
 results = []#predict results
 y = model.predict(test_set)
 for j in range(nb_files):
