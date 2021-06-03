@@ -4,4 +4,5 @@ hand_washing_ds
 differ.py
 trainer.py
 cnn_naive_trainer.py
-development_2.ipynb
+models
+test

@@ -1,9 +1,10 @@
 import cv2
-
+import os
 import numpy as np
+import matplotlib.pyplot as plt
+
 np.seterr(divide='ignore', invalid='ignore')
 
-import matplotlib.pyplot as plt
 
 
 
@@ -171,8 +172,9 @@ def biggestContour(contours):
 def calcRoi(singleFrame):
     sh = singleFrame.shape
     cx, cy = sh[1]//2, sh[0]//2 
+    print(cx,cy)
     # t,b,l,r
-    return [cy//4, 6*cy//4, cx//4, 6*cx//4] 
+    return [cy//4, 7*cy//4, cx//4, 7*cx//4] 
 
 
 def get_hand_segmented(rawFrame, kernel, threshing = True):
@@ -181,38 +183,11 @@ def get_hand_segmented(rawFrame, kernel, threshing = True):
     res, i = getPixMap(rawFrame)
     if threshing:
         ret, res = cv2.threshold(res,t,255, cv2.THRESH_BINARY)
-        # res = cv2.morphologyEx(res, cv2.MORPH_OPEN, kernel)
+        res = cv2.morphologyEx(res, cv2.MORPH_OPEN, kernel)
 
     return rawFrame, res
 
-# RElated to Vidoe Runn
-# cv2.createTrackbar('rGreen', "Frame", int(100*gMean), 100, on_change_rGreen)
-# def on_change_rGreen(value):
-#     global gMean
-#     gMean = value/100
 
-# cap = cv2.VideoCapture(path)
-
-# detector = hD()
-# while True:
-#     ret, frame = cap.read()
-#     if not ret:
-#         break
-    
-    
-#     cv2.imshow("Frame", frame)
-    
-# #     f, i = getPixMap(frame)
-# #     f = np.uint8(255*f)
-# #     ret, thresh = cv2.threshold(f,1,255, cv2.THRESH_BINARY|cv2.THRESH_OTSU)
-# #     cv2.imshow("Frame 2", thresh)
-    
-#     frame = greyWorld(frame)
-#     hands = detector.findHands(frame)
-#     cv2.imshow("Hands", hands)
-#     k = cv2.waitKey(30) & 0xff
-#     if k ==27:
-#         break
-
-# cap.release()
-# cv2.destroyAllWindows()
+## Reading Train Data Images 
+def read_data():
+    pass
