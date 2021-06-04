@@ -42,7 +42,8 @@ for f in files:
 	path = './test/'+f
 	cap = cv2.VideoCapture(path)
 	fps = cap.get(5)
-	img_rows,img_cols,img_depth=32,32,15
+	img_rows,img_cols,img_depth = 96,64,15
+
 	for k in range(15):
 	    ret, frame = cap.read()
 	    frame=cv2.resize(frame,(img_rows,img_cols),interpolation=cv2.INTER_AREA)

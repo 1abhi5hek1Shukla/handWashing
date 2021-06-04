@@ -1,7 +1,7 @@
 import os
 import numpy as np
 import cv2
-
+import sys
 
 def getImagesFromVideos():
 	dsPath = "./hand_washing_ds/HandWashDataset/HandWashDataset/"
@@ -61,15 +61,14 @@ def read_data():
 
 	y_labels = []
 
-	img_rows,img_cols,img_depth = 75,60,15
-
+	img_rows,img_cols,img_depth = 96,64,15
 	for key, val in classFolderMap.items():
 	    videosInFolder = os.listdir(dsPath+val)
 	    for vid in videosInFolder:
 	        cap = cv2.VideoCapture(dsPath + val + "/" + vid)
 	        enoughFrames = True
 
-	        for bundles in range(4):
+	        for bundles in range(8):
 
 	            frames = []
 	            for k in range(img_depth):
@@ -79,8 +78,9 @@ def read_data():
 	                    enoughFrames = False
 	                    break
 	                frame = cv2.resize(frame,
-	                     (img_rows, img_cols), interpolation= cv2.INTER_AREA)
+	                     (img_rows	, img_cols), interpolation= cv2.INTER_AREA)
 	                grayFrame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+
 	                frames.append(grayFrame)
 
 	            if not enoughFrames:
@@ -99,3 +99,13 @@ def preProcessing(img):
 	img = cv2.equalizeHist(img)
 	img = img / 255
 	return img
+
+
+# read_data()
+
+# grayFrame = cv2.equalizeHist(grayFrame)
+	                # cv2.namedWindow("Frame",cv2.WINDOW_NORMAL)
+	                # cv2.resizeWindow("Frame", (640,420))
+	                # cv2.imshow("Frame",grayFrame)
+	                # cv2.waitKey(0)
+	                # sys.exit()

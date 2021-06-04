@@ -1,13 +1,16 @@
 import os,sys,pdb,natsort
 import cv2
 import numpy as np
-from keras.models import Sequential, load_model
+from keras.models import load_model
 
 
 
-model_path = './models/2021-06-03 14:39:34-model.h5'
+# model_path = './models/2021-06-03 14:39:34-model.h5'
+# model_path = './models/2021-06-04 13:48:37-model.h5'
+model_path = './models/2021-06-04 00:09:01-model.h5'
 
 model = load_model(model_path)
+
 print("**************************************************")
 print("model loaded")
 
@@ -31,13 +34,16 @@ videoPath = "./test/"
 videosName = "handwash-004-a-01-g01_sHx4TMgg_TBKI.mp4"
 
 # For input dimensions
-img_rows,img_cols,img_depth=32,32,15
+img_rows,img_cols,img_depth = 96,64,15
+img_rows,img_cols,img_depth = 75,60,15
 
+print(img_rows,img_cols, img_depth)
 # #########################
-cap = cv2.VideoCapture(videoPath+videosName)
+# cap = cv2.VideoCapture(videoPath+videosName)
+cap = cv2.VideoCapture(2)
 
-writer = cv2.VideoWriter("output.mp4", 
-                         cv2.VideoWriter_fourcc(*"MP4V"), 30,(640,480))
+# writer = cv2.VideoWriter("output.mp4", 
+                         # cv2.VideoWriter_fourcc(*"MP4V"), 30,(640,480))
 
 
 frames = []
@@ -50,17 +56,17 @@ while True:
 	test_clips = []
 	
 	if start:
-		for k in range(15):
+		for k in range(img_depth):
 			ret, frame = cap.read()
 			if not ret:
 				print("Not Enough Frames")
 				sys.exit()
 			
-			# frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
 			frameCopy = frame.copy()
 			# cv2.imshow("Display", frame)
-			frame = cv2.resize(frame,(img_rows,img_cols),interpolation=cv2.INTER_AREA)
-			
+			# print(img_rows,img_cols)
+			frame = cv2.resize(frame, (img_rows,img_cols), interpolation=cv2.INTER_AREA)
+
 			gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 			frames.append(gray)
 
@@ -70,8 +76,7 @@ while True:
 
 		if not ret:
 			break
-		
-		# frame = cv2.rotate(frame, cv2.ROTATE_90_CLOCKWISE)
+
 		frameCopy = frame.copy()
 		# cv2.imshow("Display", frame)
 		
@@ -81,33 +86,34 @@ while True:
 		frames.append(gray)
 
 	inputs=np.array(frames)
+	
 	ipt=np.rollaxis(np.rollaxis(inputs,2,0),2,0)
 	
 	test_clips.append(ipt)
 	
 	x_test = np.array(test_clips)
+	x_test = x_test.reshape(x_test.shape[0],x_test.shape[1],x_test.shape[2],x_test.shape[3],1)
 
-	test_set = np.zeros((1, img_rows, img_cols, img_depth, 1))
 	
-	test_set[0,:,:,:,0]=x_test[0,:,:,:]
 
-	test_set = test_set.astype('float32')
-	test_set -= np.mean(test_set)
-	test_set /= np.max(test_set)
+	x_test = x_test.astype('float32')
+	x_test /= 255
 
 
-	y = model.predict(test_set)
+	y = model.predict(x_test)
 	index = np.argmax(y[0])
 
 	action = classFolderMap[index]
+	
+
 	image = cv2.putText(frameCopy, action + "with p = "+ str(y[0][index]), (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 
                    1, (255, 0, 0), 2, cv2.LINE_AA)
 	cv2.imshow("Display", image)
-	writer.write(cv2.resize(image, (640,480)))
+	# writer.write(cv2.resize(image, (640,480)))
 	
 	if cv2.waitKey(30) & 0xFF == 27:
 		break
 
-writer.release()
+# writer.release()
 cap.release()
 cv2.destroyAllWindows()
