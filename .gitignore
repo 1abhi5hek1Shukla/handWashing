@@ -6,3 +6,5 @@ trainer.py
 cnn_naive_trainer.py
 models
 test
+collections
+log
